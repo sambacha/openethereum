@@ -16,12 +16,6 @@ jobs:
     steps:
       - name: Clone repository
         uses: actions/checkout@v2
-     
-      - name: Set up rust
-        uses: rust-lang/simpleinfra/github-actions/simple-ci@master
- 
-      - name: Set up rust
-        run: cargo build --release --features final
     
       - name: buildx
         uses: docker/setup-buildx-action@v1.1.2
