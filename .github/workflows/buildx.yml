@@ -1,27 +1,32 @@
 name: buildx
 on: ['push']
+
+
 jobs:
-  build:
+  run:
+    name: Node ${{ matrix.node }} on ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
-    steps:
-      - uses: actions/checkout@v2
-      - run: rustup default ${{ matrix.channel }}
-      - uses: rust-lang/simpleinfra/github-actions/simple-ci@master
+
     strategy:
+      fail-fast: false
       matrix:
-        os: ['ubuntu-latest']
         channel: ['stable']
-        run: |
-          export COMPOSE_DOCKER_CLI_BUILD=1
-          cargo build --release --features final
+        os: ['ubuntu-latest']
+
+    steps:
+      - name: Clone repository
+        uses: actions/checkout@v2
+     
+      - name: Set up rust
+        uses: rust-lang/simpleinfra/github-actions/simple-ci@master
  
-      - uses: docker/setup-buildx-action@v1.1.2
-        id: buildx
+      - name: Set up rust
+        run: cargo build --release --features final
+    
+      - name: buildx
+        uses: docker/setup-buildx-action@v1.1.2
         with:
           install: true
           
-      - name:  BuildX
-        run: |
-          export COMPOSE_DOCKER_CLI_BUILD=1
-          export DOCKER_BUILDKIT=1
-          build -f scripts/docker/hub/Dockerfile --tag manifoldfinance/openethereum-instantseal .
+      - name: buildx
+        run: export COMPOSE_DOCKER_CLI_BUILD=1 && export DOCKER_BUILDKIT=1 && build -f scripts/docker/hub/Dockerfile --tag manifoldfinance/openethereum-instantseal .
