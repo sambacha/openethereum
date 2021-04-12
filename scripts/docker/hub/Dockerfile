@@ -27,7 +27,7 @@ RUN apt-get update && apt-get -y --no-install-recommends install \
 	git ca-certificates libc6-dev make software-properties-common locales \
         locale-gen en_US.UTF-8 && \
         apt -y autoremove && \
-	rm -rf /var/lib/apt/lists/*
+        rm -rf /var/lib/apt/lists/*
 	
 # install tools and dependencies
 RUN set -eux; \
