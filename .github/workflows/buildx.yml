@@ -1,0 +1,26 @@
+name: buildx
+on: ['push']
+
+
+jobs:
+  run:
+    name: Node ${{ matrix.node }} on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      fail-fast: false
+      matrix:
+        channel: ['stable']
+        os: ['ubuntu-latest']
+
+    steps:
+      - name: Clone repository
+        uses: actions/checkout@v2
+    
+      - name: buildx
+        uses: docker/setup-buildx-action@v1.1.2
+        with:
+          install: true
+          
+      - name: buildx
+        run: export COMPOSE_DOCKER_CLI_BUILD=1 && export DOCKER_BUILDKIT=1 && build -f scripts/docker/hub/Dockerfile --tag manifoldfinance/openethereum-instantseal .
