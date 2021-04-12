@@ -1,4 +1,4 @@
-FROM ubuntu:xenial
+FROM debian:buster-20210408
 
 # metadata
 ARG VCS_REF
@@ -17,6 +17,18 @@ LABEL openethereum.image.authors="devops-team@parity.io" \
 # show backtraces
 ENV RUST_BACKTRACE 1
 
+USER root
+RUN apt-get --yes update && apt-get install git make gcc ca-certificates -y --no-install-recommends
+RUN git clone https://github.com/wolfcw/libfaketime /libfaketime
+WORKDIR /libfaketime
+RUN make && make install
+
+RUN apt-get update && apt-get -y --no-install-recommends install \
+	git ca-certificates libc6-dev make software-properties-common locales \
+        locale-gen en_US.UTF-8 && \
+        apt -y autoremove && \
+	rm -rf /var/lib/apt/lists/*
+	
 # install tools and dependencies
 RUN set -eux; \
 	apt-get update; \
